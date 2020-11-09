@@ -1,0 +1,91 @@
+namespace App\Http\Controllers;
+ 
+use Illuminate\Http\Request;
+abstract class BaseController {
+    protected $urlParams;
+    protected $action;
+
+    public function __construct($action, $urlParams) {
+        $this->action = $action;
+        $this->urlParams = $urlParams;
+    }
+
+    public function ExecuteAction() {
+        return $this->{$this->action}();
+    }
+
+    protected function RenderView($viewModel, $fullView = true) {
+        $classData = explode("\\", get_class($this));
+        $className = end($classData);
+
+        $content = __DIR__ .
+               "/../../../views/" .
+               $className . "/" .
+               $this->action . ".php";
+
+        if ($fullView) {
+            require __DIR__ . "/../../../views/template.php";
+        } else {
+            require $content;
+        }
+    }
+}
+namespace controllers;
+
+use lib\MVC\Controller\BaseController;
+
+class Home extends BaseController {
+    protected function Index() {
+        $viewModel = "DATA";
+        $this->RenderView($viewModel);
+    }
+}
+<?php
+
+    require_once __DIR__ . "/AutoLoader.php";
+
+    use lib\MVC\Router;
+    use lib\MVC\Controller;
+
+    $kernel = new Router($_GET);
+    $controller = $kernel->getController();
+    $controller->ExecuteAction();
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Home extends CI_Controller{
+
+public function __construct()
+
+{
+
+parent::__construct();
+
+//Codeigniter : Write Less Do More
+
+}
+
+
+function index()
+
+{
+
+$this->load->view('v_home');
+
+}
+
+function login()
+
+{
+
+$data = array(
+);
+
+$this->load->view('v_login', $data);
+
+}
+
+
+}
